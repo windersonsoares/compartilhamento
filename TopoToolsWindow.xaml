@@ -1,0 +1,97 @@
+﻿<Window x:Class="AYPluginsRevit.Apps.TopoTools.TopoToolsWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AYPluginsRevit.Apps.TopoTools"
+             mc:Ignorable="d" 
+             Title="TopoTools" ResizeMode="NoResize" Loaded="Window_Loaded" SizeToContent="WidthAndHeight">
+    <Window.Resources>
+        <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="CenterGridCellStyle" TargetType="DataGridCell">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="270"/>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="200"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Vertical" Margin="4" Grid.Column="0">
+            <Label Content="Parâmetros da escavação" FontWeight="Bold"/>
+            <DockPanel Margin="2">
+                <Label Content="Inclinação em H:V"/>
+                <TextBox x:Name="tb_factor" Height="25" Width="100" HorizontalAlignment="Right" Text="1" TextAlignment="Right" TextChanged="tb_factor_TextChanged" LostFocus="tb_factor_LostFocus" MaxLength="5"/>
+            </DockPanel>
+            <DockPanel Margin="2">
+                <Label Content="Inclinação em ângulo: "/>
+                <TextBox x:Name="tb_angle" Height="25" Width="100" HorizontalAlignment="Right" Text="45" TextAlignment="Right" IsReadOnly="True" Background="LightGray" />
+            </DockPanel>
+            <DockPanel Margin="2">
+                <Label Content="Elevação do terreno (m):"/>
+                <TextBox x:Name="tb_terrainElevation" Height="25" Width="100" HorizontalAlignment="Right" Text="380,50" TextAlignment="Right"/>
+            </DockPanel>
+            <DockPanel Margin="2">
+                <Label Content="Altura extra (cm):"/>
+                <TextBox x:Name="tb_extraHeight" Height="25" Width="100" HorizontalAlignment="Right" Text="5" TextAlignment="Right" TextChanged="tb_extraHeight_TextChanged"/>
+            </DockPanel>
+            <DockPanel Margin="2">
+                <Label Content="Comprimento extra (cm):"/>
+                <TextBox x:Name="tb_extraLenght" Height="25" Width="100" HorizontalAlignment="Right" Text="60" TextAlignment="Right" TextChanged="tb_extraLenght_TextChanged"/>
+            </DockPanel>
+            <DockPanel Margin="2">
+                <Label Content="Divisões em taludes (cm):"/>
+                <TextBox x:Name="tb_divisions" Height="25" Width="100" HorizontalAlignment="Right" Text="5" TextAlignment="Right"/>
+            </DockPanel>
+            <StackPanel Margin="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                <CheckBox  Content="Separar escavações?" HorizontalAlignment="Center" Height="25" VerticalContentAlignment="Center" x:Name="cb_separate"/>
+                <CheckBox  Content="Criar linhas?" HorizontalAlignment="Center" Height="25" Margin="10,0,0,0" VerticalContentAlignment="Center" x:Name="cb_createLines"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="bt_selectLevel" Content="Elevação do nível" Margin="2" Height="25" Click="bt_selectLevel_Click" Width="127"/>
+                <Button x:Name="bt_selectElement" Content="Elevação do elemento" Margin="2" Height="25" Click="bt_selectElement_Click" Width="127"/>
+            </StackPanel>
+            <Button x:Name="bt_CreateExcavation" Content="Criar escavação" Margin="2" Height="25" Click="bt_CreateExcavation_Click" Background="LightGreen"/>
+            <Button x:Name="bt_CreateDifference" Content="Criar reaterro" Margin="2" Height="25"  Background="LightBlue" Click="bt_CreateDifference_Click"/>
+            <Button x:Name="btnCancel" Content="Cancelar" Height="25" Margin="2" VerticalAlignment="Center" IsCancel="True" Click="btnCancel_Click" Background="IndianRed"/>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Margin="4" Grid.Column="1">
+            <Label Content="Elementos" FontWeight="Bold"/>
+            <DataGrid x:Name="dg_groups" ItemsSource="{Binding}" Height="174" Margin="2" IsReadOnly="True" AutoGenerateColumns="False" SelectionMode="Single">
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                    </Style>
+                </DataGrid.CellStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Tipo" Width="1*" Binding="{Binding Tipo}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                    <DataGridTextColumn Header="Quantidade" Width="1*" Binding="{Binding Quantity}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <Button x:Name="bt_addElements" Content="Adicionar elementos" Margin="2" Height="25" Click="bt_addElements_Click" />
+            <Button x:Name="bt_addGroup" Content="Adicionar grupo" Margin="2" Height="25" Click="bt_addGroup_Click"/>
+            <Button x:Name="bt_removeGroup" Content="Remover grupo" Margin="2" Height="25" Click="bt_removeGroup_Click"/>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Margin="4" Grid.Column="2">
+            <Label Content="Intersecções" FontWeight="Bold"/>
+            <DataGrid x:Name="dg_intersections" ItemsSource="{Binding}" Height="174" Margin="2" IsReadOnly="True" AutoGenerateColumns="False" SelectionMode="Single">
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                    </Style>
+                </DataGrid.CellStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Tipo" Width="1*" Binding="{Binding Tipo}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                    <DataGridTextColumn Header="Quantidade" Width="1*" Binding="{Binding Quantity}" HeaderStyle="{StaticResource CenterGridHeaderStyle}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <Button x:Name="bt_addIntersection" Content="Adicionar intersecção" Margin="2" Height="25" Click="bt_addIntersection_Click"/>
+            <Button x:Name="bt_addSpace" Content="Adicionar espaço" Margin="2" Height="25" Click="bt_addSpace_Click"/>
+            <Button x:Name="bt_addProjection" Content="Adicionar projeção" Margin="2" Height="25" Click="bt_addProjection_Click" />
+            <Button x:Name="bt_removeIntersections" Content="Remover intersecção" Margin="2" Height="25" Click="bt_removeIntersections_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
