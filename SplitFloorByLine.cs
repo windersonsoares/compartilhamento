@@ -1,4 +1,4 @@
-﻿using Autodesk.Revit.ApplicationServices;
+using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
@@ -65,13 +65,18 @@ namespace AYRevit.Commands.Modify
                     // Pega o croqui dos elementos
                     CurveArrArray curveArrArray = new CurveArrArray();
 
+                    string elementType = "";
+
                     if (element is Floor floor)
                     {
+                        elementType = "Floor";
+
                         // Curvas do piso
                         curveArrArray = (doc.GetElement(floor.SketchId) as Sketch).Profile;
                     }
                     else if (element is Ceiling ceiling)
                     {
+                        elementType = "Ceiling";
                         // Curvas do forro
                         curveArrArray = (doc.GetElement(ceiling.SketchId) as Sketch).Profile;
                     }
@@ -228,7 +233,15 @@ namespace AYRevit.Commands.Modify
                         // Cria os pisos
                         foreach (IList<CurveLoop> loops in dividedFloorCurveLoops)
                         {
-                            Floor dividedFloor = Floor.Create(doc, loops, typeId, level.Id);
+                            if (elementType == "Floor")
+                            {
+                                Floor dividedFloor = Floor.Create(doc, loops, typeId, level.Id);
+                            }
+                            else if (elementType == "Ceiling")
+                            {
+                                Ceiling ceiling = Ceiling.Create(doc, loops, typeId, level.Id);
+                            }
+
                         }
 
                         trans.Commit();
